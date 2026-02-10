@@ -3,17 +3,23 @@ import Mongoose from "mongoose";
 import { timeStamp } from "node:console";
 import { type } from "node:os";
 
-const todosSchema = new mongoose.Schema({
-  text : {
-    type : String,
+const todoSchema = new mongoose.Schema({
+  title: {
+    type: String,
     required: true
   },
-  completed : {
-    type : Boolean,
-    default : false
+  description: String,
+  completed: {
+    type: Boolean,
+    default: false
   },
-},{timestamps : true})
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",   // 🔥 link to User
+    required: true
+  }
+}, { timestamps: true });
 
-const Todo = mongoose.model("Todo" , todosSchema );
+const Todo = mongoose.model("Todo" , todoSchema );
 
 export default Todo;

@@ -1,10 +1,10 @@
 import express from "express";
 import Todo from "../models/todo.model.js";
 
-const router = express.Router();
+const todoRouter = express.Router();
 
 // GET all todos
-router.get("/", async (req, res) => {
+todoRouter.get("/", async (req, res) => {
   try {
     const todos = await Todo.find();
     res.json(todos);
@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
 });
 
 // CREATE todo
-router.post("/", async (req, res) => {
+todoRouter.post("/", async (req, res) => {
   const todo = new Todo({
     text: req.body.text,
     completed: false
@@ -29,7 +29,7 @@ router.post("/", async (req, res) => {
 });
 
 // UPDATE todo
-router.patch("/:id", async (req, res) => {
+todoRouter.patch("/:id", async (req, res) => {
   try {
     const todo = await Todo.findById(req.params.id);
     if (!todo) {
@@ -52,7 +52,7 @@ router.patch("/:id", async (req, res) => {
 });
 
 // DELETE todo
-router.delete("/:id", async (req, res) => {
+todoRouter.delete("/:id", async (req, res) => {
   try {
     const deletedTodo = await Todo.findByIdAndDelete(req.params.id);
     if (!deletedTodo) {
@@ -64,5 +64,5 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-export default router;
+export default todoRouter;
   
