@@ -34,11 +34,7 @@ userRouter.post('/signin', async (req, res) => {
       email: email,
     });
     const matchedPassword = bcrypt.compare(password, user.password);
-    if (!user) {
-      res.json({
-        message: 'user not found',
-      });
-    } else if (!matchedPassword) {
+    if (!user && !matchedPassword) {
       res.json({
         message: 'incorrect password',
       });
@@ -56,4 +52,4 @@ userRouter.post('/signin', async (req, res) => {
   }
 });
 
-export default userRouter;
+export  { userRouter , JWT_SECRETE };
