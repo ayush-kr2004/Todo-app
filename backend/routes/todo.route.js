@@ -6,12 +6,11 @@ import { mongoose } from "mongoose";
 const todoRouter = express.Router();
 
 // GET all todos
-todoRouter.get("/",userMiddleware, async (req, res) => {
+todoRouter.get("/", userMiddleware, async (req, res) => {
   const userId = req.userId;
-  console.log("=============userId=============="+userId);
-  
+
   try {
-    const todos = await Todo.find({userId : userId})
+    const todos = await Todo.find({ userId: userId })
 
     res.json(todos);
   } catch (error) {
@@ -20,10 +19,10 @@ todoRouter.get("/",userMiddleware, async (req, res) => {
 });
 
 // CREATE todo
-todoRouter.post("/",userMiddleware, async (req, res) => {
+todoRouter.post("/", userMiddleware, async (req, res) => {
   const userId = req.userId;
 
-  const { title , description } = req.body ;
+  const { title, description } = req.body;
 
   try {
     const newTodo = await Todo.create({
@@ -33,7 +32,7 @@ todoRouter.post("/",userMiddleware, async (req, res) => {
     });
     res.status(201).json({
       message: "Todo ceated",
-      todo : newTodo._id
+      todo: newTodo._id
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -41,23 +40,32 @@ todoRouter.post("/",userMiddleware, async (req, res) => {
 });
 
 // UPDATE todo
-todoRouter.put("/",userMiddleware, async (req, res) => {
- const userId = req.userId;
+todoRouter.put("/", userMiddleware, async (req, res) => {
+  const userId = req.userId;
 
-  const { title , description , todoId} = req.body ;
+  const { title, description, completed, todoId } = req.body;
 
   try {
-    const newTodo = await Todo.updateOne({
-      _id : todoId,
-      userId : userId
-    },{
-      title : title,
-      description : description ,
-      userId:userId
-    });
-    res.status(201).json({
+    const updateData = { userId };
+    if (title !== undefined) updateData.title = title;
+    if (description !== undefined) updateData.description = description;
+    if (completed !== undefined) updateData.completed = completed;
+
+    const newTodo = await Todo.updateOne(
+      {
+        _id: todoId,
+        userId: userId,
+      },
+      updateData
+    );
+
+    if (newTodo.matchedCount === 0) {
+      return res.status(404).json({ message: "Todo not found" });
+    }
+
+    res.status(200).json({
       message: "Todo updated",
-      todo : newTodo._id
+      todo: todoId,
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -65,13 +73,13 @@ todoRouter.put("/",userMiddleware, async (req, res) => {
 });
 
 // DELETE todo
-todoRouter.delete("/",userMiddleware, async (req, res) => {
+todoRouter.delete("/", userMiddleware, async (req, res) => {
   const userId = req.userId;
   const { todoId } = req.body;
   try {
     const deletedTodo = await Todo.findByIdAndDelete({
-      _id : todoId,
-      userId : userId
+      _id: todoId,
+      userId: userId
     });
     if (!deletedTodo) {
       return res.status(404).json({ message: "Todo not found" });
@@ -83,4 +91,3 @@ todoRouter.delete("/",userMiddleware, async (req, res) => {
 });
 
 export default todoRouter;
-  
