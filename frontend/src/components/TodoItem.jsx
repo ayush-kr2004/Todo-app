@@ -4,6 +4,9 @@ import { todoListState } from "../store/atoms";
 import { todoService } from "../services/todo.service";
 import { FaTrash, FaCheck, FaUndo, FaEdit } from "react-icons/fa";
 import clsx from "clsx";
+import { motion } from "framer-motion";
+
+
 
 const TodoItem = ({ todo }) => {
     const setTodoList = useSetRecoilState(todoListState);

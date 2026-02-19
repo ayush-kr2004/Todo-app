@@ -34,7 +34,7 @@ userRouter.post('/signin', async (req, res) => {
       email: email,
     });
     const matchedPassword = bcrypt.compare(password, user.password);
-    if (!user && !matchedPassword) {
+    if (!user || !matchedPassword) {
       res.json({
         message: 'incorrect password',
       });
